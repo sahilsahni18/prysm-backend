@@ -1,98 +1,292 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Prysm Backend – Mini CRM Backend API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+This repository contains a **production-grade backend API** built using **NestJS**, **Prisma**, and **PostgreSQL**.  
+It implements authentication, role-based access control, and core CRM features including **Users**, **Customers**, and **Tasks**.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+This project was developed as part of a **Backend Internship Assignment** and follows real-world backend engineering practices.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🚀 Tech Stack
 
-## Project setup
+- **Node.js**
+- **NestJS**
+- **TypeScript**
+- **PostgreSQL**
+- **Prisma ORM**
+- **JWT Authentication**
+- **class-validator**
+- **Postman** (manual API testing)
 
+---
+
+## 🧩 Project Modules & Phases
+
+### Phase 1 – Authentication
+- User registration
+- User login
+- Password hashing
+- JWT token generation
+- Role support (`ADMIN`, `EMPLOYEE`)
+
+---
+
+### Phase 2 – Users (ADMIN Only)
+- View all users
+- View user by ID
+- Update user role
+- Enforced role-based access using Guards & Decorators
+
+---
+
+### Phase 3 – Customers
+- Create, Read, Update, Delete customers
+- Pagination support
+- ADMIN → full access
+- EMPLOYEE → read-only access
+- Email & phone uniqueness enforced
+
+---
+
+### Phase 4 – Tasks
+- Create and assign tasks (ADMIN)
+- View tasks
+  - ADMIN → all tasks
+  - EMPLOYEE → only assigned tasks
+- Update task status
+  - EMPLOYEE → only own tasks
+  - ADMIN → any task
+
+---
+
+## 🧱 Database Schema (Overview)
+
+### User
+- id
+- name
+- email (unique)
+- password
+- role (ADMIN / EMPLOYEE)
+- createdAt
+- updatedAt
+
+### Customer
+- id
+- name
+- email (unique)
+- phone (unique)
+- company (optional)
+- createdAt
+- updatedAt
+
+### Task
+- id
+- title
+- description
+- status (PENDING / IN_PROGRESS / DONE)
+- assignedTo (User)
+- customer (Customer)
+- createdAt
+- updatedAt
+
+---
+
+## ⚙️ Setup Instructions
+
+### 1️⃣ Clone Repository
 ```bash
-$ npm install
+git clone <your-repo-url>
+cd prysm-backend/backend
 ```
 
-## Compile and run the project
-
+### 2️⃣ Install Dependencies
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
+### 3️⃣ Environment Variables
 
-```bash
-# unit tests
-$ npm run test
+Create a `.env` file in `backend/`:
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```env
+DATABASE_URL=postgresql://postgres:<password>@localhost:5432/prysmdb
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRES_IN=3600
+NODE_ENV=development
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+### 4️⃣ Run Prisma Migrations
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npx prisma migrate dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 5️⃣ Start Development Server
+```bash
+npm run start:dev
+```
 
-## Resources
+Server runs at:
+```
+http://localhost:3000
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+---
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## 🔐 Authentication Flow
 
-## Support
+### Register User
+**POST** `/auth/register`
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```json
+{
+  "name": "Admin User",
+  "email": "admin@test.com",
+  "password": "password123",
+  "role": "ADMIN"
+}
+```
 
-## Stay in touch
+### Login
+**POST** `/auth/login`
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```json
+{
+  "email": "admin@test.com",
+  "password": "password123"
+}
+```
 
-## License
+**Response:**
+```json
+{
+  "accessToken": "JWT_TOKEN"
+}
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+**Use token in headers:**
+```
+Authorization: Bearer <JWT_TOKEN>
+```
+
+---
+
+## 👥 Users API (ADMIN Only)
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/users` | Get all users |
+| GET | `/users/:id` | Get user by ID |
+| PATCH | `/users/:id` | Update user role |
+
+---
+
+## 🏢 Customers API
+
+| Method | Endpoint | Access |
+|--------|----------|--------|
+| POST | `/customers` | ADMIN |
+| GET | `/customers` | ADMIN, EMPLOYEE |
+| GET | `/customers/:id` | ADMIN, EMPLOYEE |
+| PATCH | `/customers/:id` | ADMIN |
+| DELETE | `/customers/:id` | ADMIN |
+
+**Pagination Example:**
+```
+GET /customers?page=1&limit=10
+```
+
+---
+
+## 📝 Tasks API
+
+| Method | Endpoint | Access |
+|--------|----------|--------|
+| POST | `/tasks` | ADMIN |
+| GET | `/tasks` | ADMIN, EMPLOYEE |
+| PATCH | `/tasks/:id` | ADMIN, EMPLOYEE (own task only) |
+
+### Create Task (ADMIN)
+```json
+{
+  "title": "Follow up with customer",
+  "description": "Call and confirm requirements",
+  "assignedToId": 2,
+  "customerId": 1
+}
+```
+
+### Update Task Status
+```json
+{
+  "status": "IN_PROGRESS"
+}
+```
+
+---
+
+## 🧪 Manual Testing (Postman)
+
+All APIs were manually tested using **Postman**.
+
+### Tested Scenarios
+- ✅ Registration & login
+- ✅ JWT authentication
+- ✅ Role-based access control
+- ✅ Admin vs Employee permissions
+- ✅ Pagination
+- ✅ Ownership validation (tasks)
+
+### Negative Cases
+- ✅ 401 Unauthorized
+- ✅ 403 Forbidden
+- ✅ 404 Not Found
+- ✅ Duplicate entries
+
+Postman collections can be recreated using the above API definitions.
+
+---
+
+## 🛡️ Security & Design Decisions
+
+- **JWT Authentication** using Passport strategy
+- **Role-based Authorization** using Guards & Decorators
+- **DTO-based Validation** using `class-validator`
+- **Prisma** for type-safe database access
+- **Clean Separation of Concerns:**
+  - Controller
+  - Service
+  - DTO
+- **Scalable Folder Structure** following NestJS best practices
+
+---
+
+## 📦 Scripts
+
+```bash
+npm run start:dev   # Start development server
+npm run build       # Build project
+npm test            # Run tests
+```
+
+---
+
+## ✅ Final Checklist
+
+- ✅ Authentication implemented
+- ✅ RBAC enforced
+- ✅ All CRUD operations working
+- ✅ Pagination implemented
+- ✅ Manual testing completed
+- ✅ Prisma migrations included
+- ✅ .env excluded from repo
+- ✅ Single comprehensive README
+
+---
+
+## 📄 License
+
+This project is part of a Backend Internship.
+
+---
+
+**Happy Coding! 🚀**
