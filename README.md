@@ -288,5 +288,3 @@ npm test            # Run tests
 This project is part of a Backend Internship.
 
 ---
-
-**Happy Coding! 🚀**
